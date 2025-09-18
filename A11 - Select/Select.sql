@@ -24,3 +24,23 @@ SELECT id_venda, nome_marca, nome_modelo FROM venda
 JOIN veiculo USING (id_veiculo)
 JOIN marca USING (id_marca)
 JOIN modelo USING (id_modelo);
+
+--3 
+SELECT nome_marca, COUNT(*) AS qtd_vendidos
+FROM venda
+JOIN veiculo USING (id_veiculo)
+JOIN modelo USING (id_modelo)
+JOIN marca USING (id_marca)
+GROUP BY nome_marca; --Ordena pelos nomes das marcas
+
+--4                              
+SELECT nome_corretor, SUM(valor_venda) AS total_vendido --Função de soma  
+FROM venda
+JOIN corretor USING (id_corretor)
+GROUP BY nome_corretor --Agrupado pelo nome do corretor
+HAVING SUM(valor_venda) > 100000; --Filtra por valor maior do que 10000
+
+--7
+SELECT nome_compr FROM venda
+JOIN comprador USING (id_compr)
+WHERE valor_venda > 80000;
