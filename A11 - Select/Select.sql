@@ -40,7 +40,97 @@ JOIN corretor USING (id_corretor)
 GROUP BY nome_corretor --Agrupado pelo nome do corretor
 HAVING SUM(valor_venda) > 100000; --Filtra por valor maior do que 10000
 
+--5
+SELECT cod_marca AS marca,
+        AVG(valor_venda) AS media
+FROM venda
+JOIN veiculo USING (id_veiculo)
+JOIN modelo USING (id_modelo)
+JOIN marca USING (id_marca)
+GROUP BY cod_marca --Agrupa pelo codigo da marca
+GROUP BY AVG(valor_venda) DESC; --Organiza pelo valor menor para maior.
+
+--6
+SELECT id_corretor, nome_corretor, COUNT(*) as num_vendas
+FROM venda
+JOIN corretor USING (id_corretor)
+GROUP BY id_corretor, nome_corretor
+HAVING COUNT(*) >= 3
+ORDER BY COUNT(*) ASC;
+
 --7
 SELECT nome_compr FROM venda
 JOIN comprador USING (id_compr)
 WHERE valor_venda > 80000;
+
+--8
+SELECT 
+    TO_CHAR(data_venda, 'YYYY-MM') AS data, --Transforma um valor "Date" em string no formato a frente no caso YYYY-MM
+    COUNT(*) AS vendas
+FROM venda
+GROUP BY data
+ORDER BY data ASC;
+
+--9
+SELECT 
+    COUNT(*) AS qtd_vendas
+    cod_marca AS marca
+    nome_modelo AS modelo
+FROM venda
+JOIN veiculo USING (id_veiculo)    
+JOIN marca USING (id_marca)    
+JOIN modelo USING (id_modelo)
+GROUP BY cod_marca, nome_modelo
+ORDER BY COUNT(*) DESC
+LIMIT 5;
+
+--10 FALTA o NUMERIC
+SELECT 
+    cod_marca AS marca,
+    nome_modelo AS modelo,
+    AVG(quilometragem) AS KM
+FROM venda
+JOIN veiculo USING(id_veiculo)
+JOIN modelo USING(id_modelo)
+JOIN marca USING(id_marca)
+GROUP BY cod_marca, nome_modelo, quilometragem
+HAVING AVG (quilometragem) > 50000
+ORDER BY AVG (quilometragem) DESC;
+
+--11 
+SELECT
+    id_veiculo
+    num_chassi,
+    ano_fabrica,
+    nome_modelo,
+    cod_marca
+FROM venda 
+JOIN veiculo USING (id_veiculo)
+JOIN modelo USING (id_modelo)
+JOIN marca USING (id_marca)
+WHERE ano_fabrica >= '2024-01-01' AND ano_fabrica <= '2024-12-31'
+ORDER BY ano_fabrica DESC;
+
+--12
+SELECT 
+    id_corretor,
+    nome_corretor,
+    SUM(comissao_corretor) AS total_comissao
+FROM venda
+JOIN corretor USING (id_corretor)
+GROUP BY id_corretor, nome_corretor
+HAVING SUM(comissao_corretor) > 10000
+ORDER BY SUM(comissao_corretor) DESC;
+
+--13 Refazer depois
+SELECT
+    id_venda,
+    id_compr,
+    id_veiculo,
+    data_venda,
+    nome_compr,
+    cpf_compr,
+    nome_conjuge
+FROM venda
+JOIN comprador USING (id_compr)
+WHERE estado_civil ILIKE 'casado';
