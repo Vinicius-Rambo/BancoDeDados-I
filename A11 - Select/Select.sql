@@ -20,7 +20,8 @@ WHERE data_venda >= '2025-01-01'
 ORDER BY valor_venda DESC;
 
 --2
-SELECT id_venda, nome_marca, nome_modelo FROM venda
+SELECT id_venda, nome_marca, nome_modelo 
+FROM venda
 JOIN veiculo USING (id_veiculo)
 JOIN marca USING (id_marca)
 JOIN modelo USING (id_modelo);
@@ -31,7 +32,8 @@ FROM venda
 JOIN veiculo USING (id_veiculo)
 JOIN modelo USING (id_modelo)
 JOIN marca USING (id_marca)
-GROUP BY nome_marca; --Ordena pelos nomes das marcas
+GROUP BY nome_marca; --agrupa pelo nome das marcas
+ORDER BY qtd_vendidos DESC
 
 --4                              
 SELECT nome_corretor, SUM(valor_venda) AS total_vendido --Função de soma  
@@ -41,8 +43,7 @@ GROUP BY nome_corretor --Agrupado pelo nome do corretor
 HAVING SUM(valor_venda) > 100000; --Filtra por valor maior do que 10000
 
 --5
-SELECT cod_marca AS marca,
-        AVG(valor_venda) AS media
+SELECT cod_marca AS marca, AVG(valor_venda) AS media
 FROM venda
 JOIN veiculo USING (id_veiculo)
 JOIN modelo USING (id_modelo)
@@ -56,7 +57,7 @@ FROM venda
 JOIN corretor USING (id_corretor)
 GROUP BY id_corretor, nome_corretor
 HAVING COUNT(*) >= 3
-ORDER BY COUNT(*) ASC;
+ORDER BY COUNT(*) DESC;
 
 --7
 SELECT nome_compr FROM venda
@@ -81,19 +82,16 @@ JOIN veiculo USING (id_veiculo)
 JOIN marca USING (id_marca)    
 JOIN modelo USING (id_modelo)
 GROUP BY cod_marca, nome_modelo
-ORDER BY COUNT(*) DESC
+ORDER BY qtd_vendas DESC
 LIMIT 5;
 
 --10 FALTA o NUMERIC
-SELECT 
-    cod_marca AS marca,
-    nome_modelo AS modelo,
-    AVG(quilometragem) AS KM
+SELECT  cod_marca AS marca, nome_modelo AS modelo, AVG(quilometragem) AS KM
 FROM venda
 JOIN veiculo USING(id_veiculo)
 JOIN modelo USING(id_modelo)
 JOIN marca USING(id_marca)
-GROUP BY cod_marca, nome_modelo, quilometragem
+GROUP BY cod_marca,
 HAVING AVG (quilometragem) > 50000
 ORDER BY AVG (quilometragem) DESC;
 
@@ -108,29 +106,19 @@ FROM venda
 JOIN veiculo USING (id_veiculo)
 JOIN modelo USING (id_modelo)
 JOIN marca USING (id_marca)
-WHERE ano_fabrica >= '2024-01-01' AND ano_fabrica <= '2024-12-31'
+WHERE EXTRACT (YEAR FROM data_venda) = 2024
 ORDER BY ano_fabrica DESC;
 
 --12
-SELECT 
-    id_corretor,
-    nome_corretor,
-    SUM(comissao_corretor) AS total_comissao
+SELECT id_corretor, nome_corretor, SUM(comissao_corretor) AS total_comissao
 FROM venda
 JOIN corretor USING (id_corretor)
 GROUP BY id_corretor, nome_corretor
 HAVING SUM(comissao_corretor) > 10000
-ORDER BY SUM(comissao_corretor) DESC;
+ORDER BY total_comissao DESC;
 
---13 Refazer depois
-SELECT
-    id_venda,
-    id_compr,
-    id_veiculo,
-    data_venda,
-    nome_compr,
-    cpf_compr,
-    nome_conjuge
+--13 
+SELECT id_venda, nome_compr, nome_conjuge
 FROM venda
 JOIN comprador USING (id_compr)
-WHERE estado_civil ILIKE 'casado';
+WHERE estado_civil ILIKE 'casado'; --Case insensitive
