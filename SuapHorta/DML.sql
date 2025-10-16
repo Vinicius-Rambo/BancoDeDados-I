@@ -66,7 +66,6 @@ INSERT INTO membro_dia (id_membro, id_dia) VALUES
 (3,6),
 (3,4),
 (4,2),
-(4,2),
 (5,1),
 (6,6),
 (6,1),

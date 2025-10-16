@@ -49,7 +49,7 @@ CREATE TABLE membro_dia
 ( 
  id_membro INT NOT NULL REFERENCES membro(id_membro),  
  id_dia INT NOT NULL REFERENCES dia_Visita(id_dia),
- id_membro_dia SERIAL PRIMARY KEY 
+ id_membro_dia SERIAL PRIMARY KEY --Poderia ser chave composta
 ); 
 
 CREATE TABLE monitoramento (
